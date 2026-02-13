@@ -284,8 +284,8 @@ export function Phone({ onSelect }: { onSelect?: (id: string) => void }) {
         <InteractiveGroup
             onSelect={onSelect}
             sectionId="contact"
-            position={[2, -2.4, 3]}
-            rotation={[-Math.PI / 2, 0, 0.4]}
+            position={[2, -1.72, 3]}
+            rotation={[0, -0.2, 0]}
             scale={1.3}
         >
             {/* Thinner Phone body */}

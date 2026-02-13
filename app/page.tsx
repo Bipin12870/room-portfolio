@@ -1,31 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Experience from "@/components/Experience";
+
 
 export default function Page() {
   const [focusTarget, setFocusTarget] = useState<string | null>(null);
   const [showContent, setShowContent] = useState(false);
 
-  // Handle focus transition delay
-  useEffect(() => {
-    if (focusTarget) {
-      const timer = setTimeout(() => setShowContent(true), 1200); // Wait for zoom
-      return () => clearTimeout(timer);
-    }
-  }, [focusTarget]);
+
+  const handleSelect = (id: string) => {
+    setFocusTarget(id);
+    setShowContent(false);
+  };
 
   const handleReset = () => {
     setFocusTarget(null);
     setShowContent(false);
   };
 
+  const handleCardClick = () => {
+    setShowContent(true);
+
+    // Smooth scroll to the target after a tiny delay
+    setTimeout(() => {
+      const element = document.getElementById(focusTarget || "");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   return (
-    <div className={`flex flex-col min-h-screen ${focusTarget ? "overflow-hidden" : ""}`}>
+    <div className={`flex flex-col min-h-screen ${focusTarget && !showContent ? "overflow-hidden" : ""}`}>
       <Experience
         focusTarget={focusTarget}
         onReset={handleReset}
-        onSelect={(id) => setFocusTarget(id)}
+        onSelect={handleSelect}
+        onCardClick={handleCardClick}
       />
 
       <div className="vignette" />
