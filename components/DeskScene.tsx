@@ -10,6 +10,7 @@ interface InteractiveObjectProps {
     position: [number, number, number];
     rotation?: [number, number, number];
     scale?: number;
+    onSelect?: (id: string) => void;
 }
 
 interface InteractiveGroupProps extends InteractiveObjectProps {
@@ -25,6 +26,7 @@ function InteractiveGroup({
     scale = 1,
     isMain = false,
     hoverIntensity = 1.08,
+    onSelect,
 }: InteractiveGroupProps) {
     const [hovered, setHovered] = useState(false);
     const groupRef = useRef<THREE.Group>(null);
@@ -48,9 +50,8 @@ function InteractiveGroup({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleClick = (e: any) => {
         e.stopPropagation();
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
+        if (onSelect) {
+            onSelect(sectionId);
         }
     };
 
@@ -161,9 +162,10 @@ export function Desk() {
     );
 }
 
-export function Laptop() {
+export function Laptop({ onSelect }: { onSelect?: (id: string) => void }) {
     return (
         <InteractiveGroup
+            onSelect={onSelect}
             sectionId="projects"
             position={[-4.5, -2.2, -1]}
             rotation={[0, 0.45, 0]}
@@ -235,7 +237,7 @@ export function Laptop() {
     );
 }
 
-export function Books() {
+export function Books({ onSelect }: { onSelect?: (id: string) => void }) {
     const books = [
         { color: "#7c2d12", height: 0.12, offset: 0.05, rot: 0 },
         { color: "#1e3a8a", height: 0.12, offset: 0.18, rot: 0.12 },
@@ -244,6 +246,7 @@ export function Books() {
 
     return (
         <InteractiveGroup
+            onSelect={onSelect}
             sectionId="about"
             position={[5.5, -2.2, 1]}
             rotation={[0, -0.4, 0]}
@@ -276,9 +279,10 @@ export function Books() {
     );
 }
 
-export function Phone() {
+export function Phone({ onSelect }: { onSelect?: (id: string) => void }) {
     return (
         <InteractiveGroup
+            onSelect={onSelect}
             sectionId="contact"
             position={[2, -2.4, 3]}
             rotation={[-Math.PI / 2, 0, 0.4]}
@@ -321,9 +325,10 @@ export function Phone() {
     );
 }
 
-export function CoffeeMug() {
+export function CoffeeMug({ onSelect }: { onSelect?: (id: string) => void }) {
     return (
         <InteractiveGroup
+            onSelect={onSelect}
             sectionId="hero"
             position={[-5, -2.25, 2]}
             rotation={[0, 0.8, 0]}
@@ -360,9 +365,9 @@ export function CoffeeMug() {
     );
 }
 
-export function DeskLamp() {
+export function DeskLamp({ onSelect }: { onSelect?: (id: string) => void }) {
     return (
-        <InteractiveGroup sectionId="skills" position={[8.5, -2.2, -4]} scale={2.5}>
+        <InteractiveGroup onSelect={onSelect} sectionId="skills" position={[8.5, -2.2, -4]} scale={2.5}>
             {/* Base */}
             <mesh castShadow>
                 <cylinderGeometry args={[0.4, 0.45, 0.08, 32]} />
@@ -419,9 +424,10 @@ export function DeskLamp() {
     );
 }
 
-export function Notepad() {
+export function Notepad({ onSelect }: { onSelect?: (id: string) => void }) {
     return (
         <InteractiveGroup
+            onSelect={onSelect}
             sectionId="about"
             position={[0, -2.22, 0.5]}
             rotation={[0, 0.2, 0]}
@@ -445,20 +451,32 @@ export function Notepad() {
     );
 }
 
-export default function DeskScene() {
+export default function DeskScene({
+    focusTarget = null,
+    onSelect,
+}: {
+    focusTarget?: string | null;
+    onSelect?: (id: string) => void;
+}) {
     const groupRef = useRef<THREE.Group>(null);
     const { mouse } = useThree();
 
     useFrame((state) => {
         if (groupRef.current) {
-            // Smoother parallax effect
-            const targetRotationY = mouse.x * 0.1;
-            const targetRotationX = -mouse.y * 0.06;
+            // Only apply parallax if not focused
+            if (!focusTarget) {
+                const targetRotationY = mouse.x * 0.1;
+                const targetRotationX = -mouse.y * 0.06;
 
-            groupRef.current.rotation.y +=
-                (targetRotationY - groupRef.current.rotation.y) * 0.03;
-            groupRef.current.rotation.x +=
-                (targetRotationX - groupRef.current.rotation.x) * 0.03;
+                groupRef.current.rotation.y +=
+                    (targetRotationY - groupRef.current.rotation.y) * 0.03;
+                groupRef.current.rotation.x +=
+                    (targetRotationX - groupRef.current.rotation.x) * 0.03;
+            } else {
+                // Return to neutral rotation when focused for better clarity
+                groupRef.current.rotation.y += (0 - groupRef.current.rotation.y) * 0.05;
+                groupRef.current.rotation.x += (0 - groupRef.current.rotation.x) * 0.05;
+            }
 
             // Subtle breathing animation
             const breathe = Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
@@ -469,12 +487,12 @@ export default function DeskScene() {
     return (
         <group ref={groupRef}>
             <Desk />
-            <Laptop />
-            <Books />
-            <Phone />
-            <CoffeeMug />
-            <DeskLamp />
-            <Notepad />
+            <Laptop onSelect={onSelect} />
+            <Books onSelect={onSelect} />
+            <Phone onSelect={onSelect} />
+            <CoffeeMug onSelect={onSelect} />
+            <DeskLamp onSelect={onSelect} />
+            <Notepad onSelect={onSelect} />
         </group>
     );
 }
