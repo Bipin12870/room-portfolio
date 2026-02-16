@@ -14,12 +14,37 @@ interface ExperienceProps {
     onCardClick: () => void;
 }
 
-const CARD_CONTENT: Record<string, { title: string; label: string }> = {
-    hero: { title: "Hero Section", label: "Return to Top" },
-    projects: { title: "Laptop", label: "Go to Projects" },
-    skills: { title: "Desk Lamp", label: "View Skills" },
-    about: { title: "Books & Notepad", label: "About Me" },
-    contact: { title: "Phone", label: "Get in Touch" },
+const CARD_CONTENT: Record<string, { title: string; subtitle: string; description: string; label: string }> = {
+    hero: {
+        title: "WELCOME",
+        subtitle: "The Creative Space",
+        description: "Step into a world where design meets functionality. This is where the journey begins.",
+        label: "Return to Top"
+    },
+    projects: {
+        title: "PORTFOLIO",
+        subtitle: "Digital Craftsmanship",
+        description: "Explore a collection of projects built with precision, passion, and modern technologies.",
+        label: "Go to Projects"
+    },
+    skills: {
+        title: "EXPERTISE",
+        subtitle: "Technical Arsenal",
+        description: "A deep dive into the tools and frameworks that power my creative process.",
+        label: "View Skills"
+    },
+    about: {
+        title: "STORY",
+        subtitle: "Behind the Scenes",
+        description: "Learning the philosophy and the person behind the code. A balance of logic and art.",
+        label: "About Me"
+    },
+    contact: {
+        title: "CONNECT",
+        subtitle: "Let's Collaborate",
+        description: "Have an idea or just want to say hi? My lines are always open for new opportunities.",
+        label: "Get in Touch"
+    },
 };
 
 const FOCUS_COORDS: Record<
@@ -118,30 +143,77 @@ export default function Experience({ focusTarget, onReset, onSelect, onCardClick
                     >
                         <div className="animate-in fade-in zoom-in-95 duration-500 will-change-transform">
                             <ElectricBorder
-                                color="#8b6f47"
-                                speed={1}
-                                chaos={0.15}
-                                borderRadius={16}
+                                color="#22d3ee"
+                                speed={1.2}
+                                chaos={0.2}
+                                borderRadius={24}
                                 className=""
                                 style={{}}
                             >
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onCardClick();
-                                    }}
-                                    className="bg-[#fdfdfd]/95 backdrop-blur-md px-12 py-10 rounded-2xl border border-[#e8dcc8] shadow-2xl group transition-all hover:scale-105 active:scale-95 text-left w-80"
+                                <div
+                                    className="bg-[#0f172a]/95 backdrop-blur-2xl p-7 rounded-[24px] border border-white/10 shadow-[2xl] text-left w-[250px] h-[250px] flex flex-col overflow-hidden relative group/card"
                                 >
-                                    <div className="text-[10px] font-black uppercase tracking-[0.3em] text-[#8b6f47]/60 mb-1">
-                                        {CARD_CONTENT[focusTarget]?.title}
+                                    {/* Subtle top accent line */}
+                                    <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-[#22d3ee]/40 to-transparent"></div>
+                                    
+                                    {/* Category Badge - Top Right */}
+                                    <div className="absolute top-5 right-5">
+                                        <span className="text-[8px] font-bold text-[#22d3ee]/70 tracking-[0.15em] uppercase px-2 py-0.5 bg-[#22d3ee]/5 rounded border border-[#22d3ee]/20">
+                                            {CARD_CONTENT[focusTarget]?.title}
+                                        </span>
                                     </div>
-                                    <div className="text-2xl font-bold text-[#4a3a28] flex items-center gap-3">
-                                        <span>{CARD_CONTENT[focusTarget]?.label}</span>
-                                        <svg className="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                        </svg>
+
+                                    {/* Icon and Title Section */}
+                                    <div className="flex items-start gap-3 mb-4">
+                                        {/* Icon */}
+                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#22d3ee]/10 via-[#22d3ee]/5 to-transparent border border-[#22d3ee]/20 flex items-center justify-center text-[#22d3ee] relative overflow-hidden group/icon flex-shrink-0">
+                                            {/* Shine effect */}
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover/icon:opacity-100 transition-opacity duration-500"></div>
+                                            {focusTarget === 'hero' && <svg className="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>}
+                                            {focusTarget === 'projects' && <svg className="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>}
+                                            {focusTarget === 'skills' && <svg className="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>}
+                                            {focusTarget === 'about' && <svg className="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>}
+                                            {focusTarget === 'contact' && <svg className="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>}
+                                        </div>
+                                        
+                                        {/* Title */}
+                                        <div className="flex-1 min-w-0 pt-0.5">
+                                            <h2 className="text-[22px] font-black leading-[1.15] tracking-tight">
+                                                <span className="text-white/90">{CARD_CONTENT[focusTarget]?.subtitle.split(' ')[0]}</span>
+                                                <br />
+                                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#22d3ee] via-[#06b6d4] to-[#0891b2]">
+                                                    {CARD_CONTENT[focusTarget]?.subtitle.split(' ').slice(1).join(' ')}
+                                                </span>
+                                            </h2>
+                                        </div>
                                     </div>
-                                </button>
+
+                                    {/* Description */}
+                                    <p className="text-slate-400 text-[11px] leading-relaxed mb-auto font-light">
+                                        {CARD_CONTENT[focusTarget]?.description}
+                                    </p>
+
+                                    {/* Footer */}
+                                    <div className="flex items-center justify-between pt-5 mt-4 border-t border-white/5">
+                                        <div className="flex gap-1.5">
+                                            <div className="w-7 h-7 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-[#f0db4f] to-[#f0db4f] flex items-center justify-center text-[9px] text-black font-black shadow-lg shadow-yellow-500/20">JS</div>
+                                            <div className="w-7 h-7 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-[#61dafb] to-[#61dafb] flex items-center justify-center text-[9px] text-black font-black shadow-lg shadow-cyan-400/20">R</div>
+                                            <div className="w-7 h-7 rounded-full border-2 border-[#0f172a] bg-gradient-to-br from-[#3178c6] to-[#3178c6] flex items-center justify-center text-[9px] text-white font-black shadow-lg shadow-blue-500/20">TS</div>
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onCardClick();
+                                            }}
+                                            className="group/btn relative bg-white hover:bg-[#22d3ee] text-slate-900 hover:text-white font-bold px-4 py-2 rounded-lg text-[11px] uppercase tracking-wide transition-all duration-200 active:scale-95 shadow-lg hover:shadow-[#22d3ee]/30 flex items-center gap-1.5 overflow-hidden"
+                                        >
+                                            <span className="relative z-10">Enter</span>
+                                            <svg className="w-3 h-3 relative z-10 group-hover/btn:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </ElectricBorder>
                         </div>
                     </Html>

@@ -151,13 +151,12 @@ const ElectricBorder = ({
     const amplitude = chaos;
     const frequency = 10;
     const baseFlatness = 0;
-    const displacement = 60;
-    const borderOffset = 60;
+    const displacement = 15;
+    const borderOffset = 20;
 
     const updateSize = () => {
-      const rect = container.getBoundingClientRect();
-      const width = rect.width + borderOffset * 2;
-      const height = rect.height + borderOffset * 2;
+      const width = container.offsetWidth + borderOffset * 2;
+      const height = container.offsetHeight + borderOffset * 2;
 
       // Use device pixel ratio for sharp rendering
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -185,8 +184,14 @@ const ElectricBorder = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.scale(dpr, dpr);
 
+      // Glitch Intensity logic
+      const glitchChance = Math.random();
+      const isGlitching = glitchChance > 0.97;
+      const glitchIntensity = isGlitching ? Math.random() * 3 + 1 : 0.5 + Math.sin(timeRef.current * 8) * 0.2;
+
       ctx.strokeStyle = color;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 1 + glitchIntensity * 0.5;
+      ctx.globalAlpha = 0.6 + glitchIntensity * 0.3;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
@@ -232,8 +237,8 @@ const ElectricBorder = ({
           baseFlatness
         );
 
-        const displacedX = point.x + xNoise * scale;
-        const displacedY = point.y + yNoise * scale;
+        const displacedX = point.x + xNoise * scale * (isGlitching ? 1.5 : 1);
+        const displacedY = point.y + yNoise * scale * (isGlitching ? 1.5 : 1);
 
         if (i === 0) {
           ctx.moveTo(displacedX, displacedY);
@@ -244,6 +249,7 @@ const ElectricBorder = ({
 
       ctx.closePath();
       ctx.stroke();
+      ctx.globalAlpha = 1.0; // Reset alpha for other layers
 
       animationRef.current = requestAnimationFrame(drawElectricBorder);
     };
